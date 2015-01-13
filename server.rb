@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'data_mapper'
+require 'tag'
 
 env = ENV['RACK_ENV'] || 'development'
 
@@ -14,10 +15,15 @@ DataMapper.auto_upgrade!
 class BookmarkManager < Sinatra::Base
 
   get '/' do
-  	
     @links = Link.all
-		erb :index
-		
+		erb :index	
+  end
+
+  post '/links' do
+    url = params["url"]
+    title = params["title"]
+    Link.create(:url => url, :title => title)
+    redirect to ('/')
   end
 
   # start the server if ruby file executed directly
