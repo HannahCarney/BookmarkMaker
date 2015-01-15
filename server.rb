@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'rack-flash'
 require 'data_mapper'
+require 'sass'
 
 env = ENV['RACK_ENV'] || 'development'
 
@@ -28,6 +29,7 @@ class BookmarkManager < Sinatra::Base
   enable :sessions
   set :sessions_secret, 'super secret'
   use Rack::Flash
+  use Rack::MethodOverride
 
 
   get '/' do
@@ -67,5 +69,29 @@ class BookmarkManager < Sinatra::Base
     end
   end
 
+  get '/sessions/new' do
+    erb :"sessions/new" #has form on it
+  end
+
+
+  post '/sessions' do
+    email, password = params[:email], params[:password]
+    user = User.authenticate(email, password)
+    if user
+      session[:user_id] = user.id
+      redirect to('/')
+    else
+      flash[:errors] = ["The email or password is incorrect"]
+      erb :"sessions/new"
+    end
+  end
+
+  delete '/sessions' do
+    session[:user_id] = nil
+    flash[:notice] = "Goodbye!"
+    redirect to('/')
+  end
+
   run! if app_file == $0
+
 end

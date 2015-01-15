@@ -1,0 +1,92 @@
+/*$red: #903;
+$black: #444;
+$white: #fff;
+$main-font: Helvetica, Arial, sans-serif;*/
+
+/*body {
+ font-family: $main-font;
+}*/
+
+h1 {
+ color: $red;
+ font: 32px/1 sans-serif;
+}
+
+/*header h1 {
+ font-size: 40px;
+ line-height: 80px;
+ background: url(/images/Fireflies.jpg) 0 0 no-repeat;
+ padding-left: 84px;
+}*/
+
+/*@mixin tabs ($background: blue, $color: yellow) {
+
+ ul {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   background: $background;
+   overflow: hidden;
+ }
+
+ li {
+ float: left;
+ }
+
+ a {
+	 text-decoration: none;
+	 display: block;
+	 padding: 8px;
+	 background: $background;
+	 color: $color;
+	 &:hover {
+	 	background: darken($background, 20%);
+ 		}
+  	}
+}
+
+nav {
+ @include tabs ($background: $black, $color: $white);
+ font-weight: bold;
+}
+
+nav a.current {
+	background: lighten($black, 20%);
+}
+
+p {
+ font: 13px/1.4 $main-font;
+}
+
+.flash {
+  width: 600px;
+  padding: 5px;
+  font-weight: bold;
+  margin: 20px;
+  background: lighten($red, 60%);
+  color: $red;
+  border: 1px solid $red;
+}
+
+label { display: block; }
+
+
+*/
+/*header {
+  width: 100%;
+  height: 30px;
+  background-color: black;
+  color: white;
+  display: flex;
+  padding: 0 5px;*/
+/*}
+
+/*header #logo {
+  margin: auto 0;
+  display: flex;  
+  font-family: Helvetica, Arial, Sans-serif;
+}*/
+
+body {
+ background: url(/images/ipad_bookshelf_background_by_daftfunk841.png) 0 0 no-repeat;
+}
