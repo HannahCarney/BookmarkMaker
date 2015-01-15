@@ -4,8 +4,10 @@ class User
   include DataMapper::Resource
 
   property :id, Serial
-  property :email, String
+  property :email, String, :unique => true
   property :password_digest, Text
+  property :email, String, :unique => true, :message => "This email is already taken"
+
 
 	attr_reader :password
 	attr_accessor :password_confirmation
@@ -16,7 +18,7 @@ class User
 	# read more about it in the documentation
 	# http://datamapper.org/docs/validations.html
 	validates_confirmation_of :password
-
+  validates_uniqueness_of :email
   # when assigned the password, we don't store it directly
   # instead, we generate a password digest, that looks like this:
   # "$2a$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa"
