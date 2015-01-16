@@ -17,5 +17,17 @@ module SessionHelpers
       fill_in 'password', :with => password
       click_button 'Sign in'
     end
+
+    def request_token(email = "alice@example.com")
+      visit '/sessions/request_token'
+      fill_in 'email', :with => email
+      click_button 'Send'
+    end
+
+    def change_password(new_password)
+      fill_in 'password', :with => new_password
+      fill_in 'password_confirmation', :with => new_password
+      click_button 'Submit'
+    end
   
 end

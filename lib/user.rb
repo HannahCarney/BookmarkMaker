@@ -1,4 +1,6 @@
 require 'bcrypt'
+require 'pony'
+require 'secret_files'
 class User
 
   include DataMapper::Resource
@@ -6,25 +8,15 @@ class User
   property :id, Serial
   property :email, String, :unique => true
   property :password_digest, Text
-  
-
+  property :password_token,  Text
+  property :password_token_timestamp, Time
 
 	attr_reader :password
 	attr_accessor :password_confirmation
-
-	# this is datamapper's method of validating the model.
-	# The model will not be saved unless both password
-	# and password_confirmation are the same
-	# read more about it in the documentation
-	# http://datamapper.org/docs/validations.html
+	
 	validates_confirmation_of :password
   validates_uniqueness_of :email
-  # when assigned the password, we don't store it directly
-  # instead, we generate a password digest, that looks like this:
-  # "$2a$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa"
-  # and save it in the database. This digest, provided by bcrypt,
-  # has both the password hash and the salt. We save it to the
-  # database instead of the plain password for security reasons.
+
   def password=(password)
   	@password = password
     self.password_digest = BCrypt::Password.create(password)
@@ -38,4 +30,27 @@ class User
       nil
     end
   end
+
+  def create_token
+    (1..64).map{('A'..'Z').to_a.sample}.join
+  end
+
+  def send_email(email)
+      Pony.mail({
+       :from => 'bookmarkmanager@gmail.com',
+       :to => @email,
+       :subject => " has contacted you",
+       :body => "Please follow the link: \"/users/reset_password/#{@password_token}\" to change your password. You have untill #{Time.now+(60*60)}",
+       :via => :smtp,
+       :via_options => {
+         :address              => 'smtp.gmail.com',
+         :port                 => '587',
+         :enable_starttls_auto => true,
+         :user_name            => $email,
+         :password             => $password,
+         :authentication       => :plain,
+         :domain => 'localhost.localdomain'
+        }
+       })
+    end
 end

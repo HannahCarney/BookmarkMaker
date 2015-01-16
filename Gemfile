@@ -16,4 +16,5 @@ group :development, :test do
   gem 'bcrypt-ruby'
   gem 'rack-flash3'
   gem 'sass'
+  gem 'pony'
 end

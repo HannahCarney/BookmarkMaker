@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'rack-flash'
 require 'data_mapper'
 require 'sass'
+require 'pony'
 
 env = ENV['RACK_ENV'] || 'development'
 
@@ -58,8 +59,8 @@ class BookmarkManager < Sinatra::Base
 
   post '/users' do
     @user = User.new(:email => params[:email],
-                :password => params[:password],
-                :password_confirmation => params[:password_confirmation])
+                     :password => params[:password],
+                     :password_confirmation => params[:password_confirmation])
     if @user.save
       session[:user_id] = @user.id
       redirect to('/')
@@ -90,6 +91,31 @@ class BookmarkManager < Sinatra::Base
     session[:user_id] = nil
     flash[:notice] = "Goodbye!"
     redirect to('/')
+  end
+
+  post '/sessions/reminder' do
+    user = User.first(:email => params[:email])
+    user.password_token = user.create_token
+    user.password_token_timestamp = Time.now
+    user.save
+    user.send_email(user.password_token)
+    redirect '/sessions/new'
+  end
+
+  get '/sessions/request_token' do
+    erb :"sessions/request_token"
+  end
+
+  get '/users/reset_password/:token' do
+    user = User.first(:password_token => params[:token])
+    @password_token = user.password_token
+    erb :"sessions/change_password"
+  end
+
+  post '/sessions/password_reset' do
+    user = User.first(:password_token => params[:password_token])
+    user.update(:password => params[:password], :password_confirmation => params[:password_confirmation])
+    redirect ('/')
   end
 
   run! if app_file == $0
